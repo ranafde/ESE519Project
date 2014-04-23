@@ -6,6 +6,7 @@ import Adafruit_ILI9341 as TFT
 import Adafruit_GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 import time
+import workingTempSensor
 
 # BeagleBone Black configuration.
 DC = 'P9_15'
@@ -41,11 +42,12 @@ def draw_rotated_text(image, text, position, angle, font, fill=(255,255,255)):
         # Paste the text into the image, using it as a mask for transparency.
         image.paste(rotated, position, rotated)
 
-
+workingTempSensor.program_init()
 while True:
     disp.clear()
     # Write two lines of white text on the buffer, rotated 90 degrees counter clockwise.
-    draw_rotated_text(disp.buffer, "Hello", (100, 160), 90, font, fill=(255,255,0))
+    currentTemp = workingTempSensor.runI2C()
+    draw_rotated_text(disp.buffer, currentTemp, (100, 160), 90, font, fill=(255,255,0))
     #draw_rotated_text(disp.buffer, 'This is a line of text.', (170, 90), 90, font, fill=(255,255,255))
     # Write buffer to display hardware, must be called to make things visible on the
     # display!
