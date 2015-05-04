@@ -7,11 +7,17 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+
+import Image
+import ImageDraw
+import ImageFont
+
 import sys
 import Adafruit_ILI9341 as TFT
 import Adafruit_GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 import time
+
 from evdev import InputDevice, categorize, ecodes
 import workingTempSensor
 import Sensors
@@ -22,6 +28,11 @@ from Subfact_ina219 import INA219
 
 
 # BeagleBone Black configuration for TFT LCD. TFT LCD works on SPI
+
+import workingTempSensor
+
+# BeagleBone Black configuration.
+
 DC = 'P9_15'
 RST = 'P9_12'
 SPI_PORT = 1
@@ -33,6 +44,9 @@ disp = TFT.ILI9341(DC, rst=RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_h
 # Initialize display.
 disp.begin()
 
+
+# Alternatively can clear to a black screen by calling:
+#disp.clear()
 
 
 # Get a PIL Draw object to start drawing on the display buffer.
@@ -300,3 +314,16 @@ while True:
 	   
     disp.display()
     time.sleep(0.1)
+
+workingTempSensor.program_init()
+while True:
+    disp.clear()
+    # Write two lines of white text on the buffer, rotated 90 degrees counter clockwise.
+    currentTemp = workingTempSensor.runI2C()
+    draw_rotated_text(disp.buffer, currentTemp, (100, 160), 90, font, fill=(255,255,0))
+    #draw_rotated_text(disp.buffer, 'This is a line of text.', (170, 90), 90, font, fill=(255,255,255))
+    # Write buffer to display hardware, must be called to make things visible on the
+    # display!
+    disp.display()
+    time.sleep(2)
+
