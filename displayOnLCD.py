@@ -315,15 +315,3 @@ while True:
     disp.display()
     time.sleep(0.1)
 
-workingTempSensor.program_init()
-while True:
-    disp.clear()
-    # Write two lines of white text on the buffer, rotated 90 degrees counter clockwise.
-    currentTemp = workingTempSensor.runI2C()
-    draw_rotated_text(disp.buffer, currentTemp, (100, 160), 90, font, fill=(255,255,0))
-    #draw_rotated_text(disp.buffer, 'This is a line of text.', (170, 90), 90, font, fill=(255,255,255))
-    # Write buffer to display hardware, must be called to make things visible on the
-    # display!
-    disp.display()
-    time.sleep(2)
-
